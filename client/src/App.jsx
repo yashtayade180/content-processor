@@ -148,6 +148,14 @@ function fmt(bytes) {
 // ── Stepper ────────────────────────────────────────────────────────────────────
 
 function Stepper({ value, onChange, min = 10 }) {
+  const [draft, setDraft] = useState(String(value))
+
+  const commit = (raw) => {
+    const n = parseInt(raw, 10)
+    if (!isNaN(n) && n >= min) { onChange(n); setDraft(String(n)) }
+    else setDraft(String(value))
+  }
+
   const btn = {
     width: 30, height: 30,
     background: 'rgba(255,255,255,0.04)',
@@ -158,16 +166,24 @@ function Stepper({ value, onChange, min = 10 }) {
   }
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
-      <button className="stepper-btn" onClick={() => onChange(Math.max(min, value - 10))}
+      <button className="stepper-btn" onClick={() => { const v = Math.max(min, value - 10); onChange(v); setDraft(String(v)) }}
         style={{ ...btn, borderRadius: '6px 0 0 6px' }}>−</button>
-      <div style={{
-        width: 50, height: 30,
-        background: 'rgba(255,255,255,0.03)',
-        border: `1px solid ${C.border}`, borderLeft: 'none', borderRight: 'none',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        color: C.text, fontSize: 13, fontWeight: 500,
-      }}>{value}</div>
-      <button className="stepper-btn" onClick={() => onChange(value + 10)}
+      <input
+        type="text"
+        inputMode="numeric"
+        value={draft}
+        onChange={e => setDraft(e.target.value)}
+        onBlur={e => commit(e.target.value)}
+        onKeyDown={e => { if (e.key === 'Enter') { e.target.blur() } }}
+        style={{
+          width: 50, height: 30,
+          background: 'rgba(255,255,255,0.03)',
+          border: `1px solid ${C.border}`, borderLeft: 'none', borderRight: 'none',
+          color: C.text, fontSize: 13, fontWeight: 500,
+          textAlign: 'center', outline: 'none',
+        }}
+      />
+      <button className="stepper-btn" onClick={() => { const v = value + 10; onChange(v); setDraft(String(v)) }}
         style={{ ...btn, borderRadius: '0 6px 6px 0' }}>+</button>
     </div>
   )
