@@ -50,7 +50,7 @@ const IconGrid = ({ color = '#6b7280' }) => (
 )
 
 const IconTransfer = ({ active }) => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+  <svg className="transfer-svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
     stroke={active ? C.accent : '#374151'} strokeWidth="1.5"
     strokeLinecap="round" strokeLinejoin="round"
     style={{ transition: 'stroke 0.3s' }}>
@@ -138,14 +138,14 @@ const IconChevron = () => (
   </svg>
 )
 
-// ── Helper ────────────────────────────────────────────────────────────────────
+// ── Helper ─────────────────────────────────────────────────────────────────────
 
 function fmt(bytes) {
   if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB'
   return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
 }
 
-// ── Stepper ───────────────────────────────────────────────────────────────────
+// ── Stepper ────────────────────────────────────────────────────────────────────
 
 function Stepper({ value, onChange, min = 10 }) {
   const btn = {
@@ -173,7 +173,7 @@ function Stepper({ value, onChange, min = 10 }) {
   )
 }
 
-// ── Toggle ────────────────────────────────────────────────────────────────────
+// ── Toggle ─────────────────────────────────────────────────────────────────────
 
 function Toggle({ checked, onChange }) {
   return (
@@ -194,7 +194,7 @@ function Toggle({ checked, onChange }) {
   )
 }
 
-// ── Drop Zone ─────────────────────────────────────────────────────────────────
+// ── Drop Zone ──────────────────────────────────────────────────────────────────
 
 function DropZone({ label, badge, Icon, file, onFile, dragging, onDragOver, onDragLeave, onDrop, onClear, inputRef, accentColor }) {
   return (
@@ -205,7 +205,7 @@ function DropZone({ label, badge, Icon, file, onFile, dragging, onDragOver, onDr
       onDragLeave={onDragLeave}
       onDrop={onDrop}
       style={{
-        flex: 1, padding: '36px 28px 30px',
+        flex: 1, padding: '32px 20px 26px',
         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12,
         cursor: 'pointer', borderRadius: 14,
         background: dragging ? `${accentColor}0f` : 'transparent',
@@ -217,9 +217,8 @@ function DropZone({ label, badge, Icon, file, onFile, dragging, onDragOver, onDr
       <input ref={inputRef} type="file" accept=".docx" style={{ display: 'none' }}
         onChange={e => e.target.files[0] && onFile(e.target.files[0])} />
 
-      {/* Icon box */}
       <div style={{
-        width: 58, height: 58, borderRadius: 14,
+        width: 56, height: 56, borderRadius: 14,
         background: 'rgba(255,255,255,0.05)',
         border: `1px solid ${C.border}`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -228,12 +227,11 @@ function DropZone({ label, badge, Icon, file, onFile, dragging, onDragOver, onDr
         <Icon color={file ? accentColor : '#6b7280'} />
       </div>
 
-      {/* Label */}
       <div style={{ textAlign: 'center' }}>
         <div style={{ color: C.text, fontWeight: 600, fontSize: 15, marginBottom: 8 }}>{label}</div>
         {file ? (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <span style={{ color: accentColor, fontSize: 13, fontWeight: 500, maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{file.name}</span>
+            <span style={{ color: accentColor, fontSize: 13, fontWeight: 500, maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{file.name}</span>
             <span style={{ color: C.muted, fontSize: 12 }}>{fmt(file.size)}</span>
             <button onClick={e => { e.stopPropagation(); onClear() }}
               style={{ background: 'none', border: 'none', color: C.muted, cursor: 'pointer', fontSize: 16, lineHeight: 1, padding: 0 }}>×</button>
@@ -248,7 +246,6 @@ function DropZone({ label, badge, Icon, file, onFile, dragging, onDragOver, onDr
         )}
       </div>
 
-      {/* Badge */}
       <div style={{
         marginTop: 2, padding: '4px 12px',
         background: 'rgba(255,255,255,0.04)',
@@ -260,7 +257,7 @@ function DropZone({ label, badge, Icon, file, onFile, dragging, onDragOver, onDr
   )
 }
 
-// ── App ───────────────────────────────────────────────────────────────────────
+// ── Sidebar data ───────────────────────────────────────────────────────────────
 
 const SIDEBAR_ITEMS = [
   { label: 'Live Editor',  Icon: IconSideEditor,      active: true  },
@@ -276,18 +273,20 @@ const BOTTOM_ITEMS = [
 
 const TOP_TABS = ['Editor', 'Pipelines', 'Schemas', 'API Access']
 
+// ── App ────────────────────────────────────────────────────────────────────────
+
 export default function App() {
-  const [sourceFile, setSourceFile]         = useState(null)
-  const [targetFile, setTargetFile]         = useState(null)
-  const [minSlot,    setMinSlot]            = useState(100)
-  const [minSection, setMinSection]         = useState(200)
-  const [reverse,    setReverse]            = useState(false)
-  const [status,     setStatus]             = useState('idle')
-  const [resultUrl,  setResultUrl]          = useState(null)
-  const [errorMsg,   setErrorMsg]           = useState('')
-  const [srcDrag,    setSrcDrag]            = useState(false)
-  const [tgtDrag,    setTgtDrag]            = useState(false)
-  const [activeTab,  setActiveTab]          = useState('Editor')
+  const [sourceFile, setSourceFile] = useState(null)
+  const [targetFile, setTargetFile] = useState(null)
+  const [minSlot,    setMinSlot]    = useState(100)
+  const [minSection, setMinSection] = useState(200)
+  const [reverse,    setReverse]    = useState(false)
+  const [status,     setStatus]     = useState('idle')
+  const [resultUrl,  setResultUrl]  = useState(null)
+  const [errorMsg,   setErrorMsg]   = useState('')
+  const [srcDrag,    setSrcDrag]    = useState(false)
+  const [tgtDrag,    setTgtDrag]    = useState(false)
+  const [activeTab,  setActiveTab]  = useState('Editor')
 
   const srcRef = useRef()
   const tgtRef = useRef()
@@ -331,11 +330,11 @@ export default function App() {
     if (tgtRef.current) tgtRef.current.value = ''
   }
 
-  const canProcess = !!(sourceFile && targetFile && status !== 'processing')
-  const bothLoaded = !!(sourceFile && targetFile)
+  const canProcess  = !!(sourceFile && targetFile && status !== 'processing')
+  const bothLoaded  = !!(sourceFile && targetFile)
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: C.bg, color: C.text, fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif', overflow: 'hidden' }}>
+    <div className="app-root">
 
       {/* ── Top Nav ── */}
       <header style={{
@@ -343,27 +342,29 @@ export default function App() {
         background: C.topNav,
         borderBottom: `1px solid ${C.border}`,
         display: 'flex', alignItems: 'center',
-        padding: '0 18px', gap: 6, zIndex: 10,
+        padding: '0 16px', gap: 6, zIndex: 10,
       }}>
         {/* Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginRight: 12, userSelect: 'none' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginRight: 10, userSelect: 'none' }}>
           <IconLogo />
           <span style={{ fontWeight: 700, fontSize: 14, letterSpacing: '-0.01em' }}>ContentFlow</span>
-          <span style={{ color: C.muted, fontSize: 10, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' }}>Studio</span>
+          <span className="top-nav-right-label" style={{ color: C.muted, fontSize: 10, fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' }}>Studio</span>
         </div>
 
-        {/* Tabs */}
-        {TOP_TABS.map(tab => (
-          <button key={tab} onClick={() => setActiveTab(tab)} style={{
-            padding: '5px 12px', borderRadius: 6, border: 'none',
-            background: activeTab === tab ? C.accent : 'transparent',
-            color: activeTab === tab ? '#fff' : C.sub,
-            fontSize: 13, fontWeight: activeTab === tab ? 600 : 400,
-            cursor: 'pointer', transition: 'all 0.15s',
-          }}>{tab}</button>
-        ))}
+        {/* Tabs — hidden on mobile via CSS */}
+        <div className="top-tabs">
+          {TOP_TABS.map(tab => (
+            <button key={tab} onClick={() => setActiveTab(tab)} style={{
+              padding: '5px 12px', borderRadius: 6, border: 'none',
+              background: activeTab === tab ? C.accent : 'transparent',
+              color: activeTab === tab ? '#fff' : C.sub,
+              fontSize: 13, fontWeight: activeTab === tab ? 600 : 400,
+              cursor: 'pointer', transition: 'all 0.15s',
+            }}>{tab}</button>
+          ))}
+        </div>
 
-        <div style={{ flex: 1 }}/>
+        <div style={{ flex: 1 }} />
 
         {/* Right pills */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -377,14 +378,12 @@ export default function App() {
             <span className="pulse-dot" style={{ width: 7, height: 7, borderRadius: '50%', background: C.green, display: 'inline-block' }}/>
             Ready
           </div>
-
           <div style={{
             padding: '4px 10px', borderRadius: 6,
             background: 'rgba(255,255,255,0.05)',
             border: `1px solid ${C.border}`,
             fontSize: 12, color: C.muted, fontFamily: 'monospace',
           }}>⌘ K</div>
-
           <div style={{
             width: 30, height: 30, borderRadius: '50%',
             background: 'linear-gradient(135deg, #7c6af7, #2dd4bf)',
@@ -395,18 +394,10 @@ export default function App() {
       </header>
 
       {/* ── Body ── */}
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+      <div className="app-body">
 
-        {/* ── Sidebar ── */}
-        <aside style={{
-          width: 220, flexShrink: 0,
-          background: C.sidebar,
-          borderRight: `1px solid ${C.border}`,
-          display: 'flex', flexDirection: 'column',
-          padding: '18px 0',
-          userSelect: 'none',
-        }}>
-          {/* Section header */}
+        {/* ── Sidebar — hidden on mobile/tablet via CSS ── */}
+        <aside className="sidebar">
           <div style={{
             padding: '0 16px 12px',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -415,7 +406,6 @@ export default function App() {
             <IconChevron />
           </div>
 
-          {/* Main nav */}
           {SIDEBAR_ITEMS.map(({ label, Icon, active }) => (
             <button key={label} className="nav-btn" style={{
               display: 'flex', alignItems: 'center', gap: 10,
@@ -425,8 +415,7 @@ export default function App() {
               color: active ? C.accent : C.sub,
               fontSize: 13, fontWeight: active ? 500 : 400,
               cursor: 'pointer', textAlign: 'left',
-              width: 'calc(100% - 16px)',
-              transition: 'all 0.15s',
+              width: 'calc(100% - 16px)', transition: 'all 0.15s',
             }}>
               <Icon /> {label}
             </button>
@@ -434,17 +423,14 @@ export default function App() {
 
           <div style={{ flex: 1 }} />
 
-          {/* Bottom nav */}
           {BOTTOM_ITEMS.map(({ label, Icon }) => (
             <button key={label} className="nav-btn" style={{
               display: 'flex', alignItems: 'center', gap: 10,
               padding: '8px 16px', margin: '1px 8px',
               borderRadius: 8, border: 'none',
-              background: 'transparent',
-              color: C.muted, fontSize: 13,
+              background: 'transparent', color: C.muted, fontSize: 13,
               cursor: 'pointer', textAlign: 'left',
-              width: 'calc(100% - 16px)',
-              transition: 'all 0.15s',
+              width: 'calc(100% - 16px)', transition: 'all 0.15s',
             }}>
               <Icon /> {label}
             </button>
@@ -452,42 +438,31 @@ export default function App() {
         </aside>
 
         {/* ── Main Content ── */}
-        <main style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', padding: '40px 48px 0' }}>
+        <main className="main-content">
 
           {/* Hero */}
-          <div style={{ textAlign: 'center', marginBottom: 28 }}>
-            {/* Badge */}
+          <div style={{ textAlign: 'center', marginBottom: 24 }}>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 7,
-              marginBottom: 20,
-              padding: '5px 14px', borderRadius: 20,
-              background: C.tealBg,
-              border: `1px solid ${C.tealBorder}`,
+              marginBottom: 18, padding: '5px 14px', borderRadius: 20,
+              background: C.tealBg, border: `1px solid ${C.tealBorder}`,
             }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.teal, display: 'inline-block' }}/>
               <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.14em', color: C.teal, fontFamily: 'monospace', textTransform: 'uppercase' }}>Neural DOCX Engine v4.2</span>
             </div>
 
-            <h1 style={{
-              fontSize: 46, fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1,
-              margin: '0 0 16px',
-              background: 'linear-gradient(160deg, #fff 0%, #d1d5db 70%, #6b7280 100%)',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}>Transform Documents Instantly</h1>
+            <h1 className="hero-title">Transform Documents Instantly</h1>
 
-            <p style={{ color: C.sub, fontSize: 14.5, lineHeight: 1.65, maxWidth: 550, margin: '0 auto 26px' }}>
+            <p className="hero-sub">
               Merge rich source content into target layout templates — preserving styling, headings, and strict paragraph word envelopes.
             </p>
 
-            {/* Preload row */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center' }}>
+            <div className="preload-row">
               <span style={{ color: C.muted, fontSize: 13 }}>Preload:</span>
               <button className="action-btn" style={{
                 display: 'flex', alignItems: 'center', gap: 6,
                 padding: '6px 14px', borderRadius: 7,
-                background: 'rgba(255,255,255,0.04)',
-                border: `1px solid ${C.border}`,
+                background: 'rgba(255,255,255,0.04)', border: `1px solid ${C.border}`,
                 color: C.sub, fontSize: 13, cursor: 'pointer', transition: 'all 0.15s',
               }}>
                 <IconSpark /> Load Sample Documents
@@ -495,8 +470,7 @@ export default function App() {
               <button className="action-btn" onClick={handleReset} style={{
                 display: 'flex', alignItems: 'center', gap: 6,
                 padding: '6px 14px', borderRadius: 7,
-                background: 'rgba(255,255,255,0.04)',
-                border: `1px solid ${C.border}`,
+                background: 'rgba(255,255,255,0.04)', border: `1px solid ${C.border}`,
                 color: C.sub, fontSize: 13, cursor: 'pointer', transition: 'all 0.15s',
               }}>
                 <IconReset /> Reset
@@ -505,13 +479,7 @@ export default function App() {
           </div>
 
           {/* ── Upload Card ── */}
-          <div style={{
-            background: C.card,
-            border: `1px solid ${C.border}`,
-            borderRadius: 16,
-            display: 'flex', alignItems: 'stretch',
-            overflow: 'hidden',
-          }}>
+          <div className="upload-card">
             <DropZone
               label="Source Document"
               badge="Max payload 64MB"
@@ -527,26 +495,10 @@ export default function App() {
               accentColor="#7c6af7"
             />
 
-            {/* Center divider + transfer */}
-            <div style={{
-              width: 130, flexShrink: 0,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              position: 'relative',
-            }}>
-              {/* Vertical line */}
-              <div style={{
-                position: 'absolute', top: 0, bottom: 0, left: '50%',
-                width: 1, background: C.border,
-                transform: 'translateX(-50%)',
-              }}/>
-              {/* Transfer icon floats over the line */}
-              <div style={{
-                position: 'relative', zIndex: 1,
-                background: C.card,
-                padding: '10px 16px',
-                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
-                borderRadius: 10,
-              }}>
+            {/* Transfer divider */}
+            <div className="transfer-zone">
+              <div className="transfer-vline" />
+              <div className="transfer-icon-wrap">
                 <IconTransfer active={bothLoaded} />
                 <span style={{ fontSize: 9, letterSpacing: '0.14em', color: bothLoaded ? C.accent : C.muted, fontFamily: 'monospace', textTransform: 'uppercase', transition: 'color 0.3s' }}>Transfer</span>
               </div>
@@ -569,13 +521,8 @@ export default function App() {
           </div>
 
           {/* ── Options Row ── */}
-          <div style={{
-            display: 'flex', alignItems: 'center', flexWrap: 'wrap',
-            gap: 0, padding: '18px 28px',
-            borderBottom: `1px solid ${C.border}`,
-          }}>
-            {/* Min words / paragraph */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16, paddingRight: 28 }}>
+          <div className="options-row">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
               <div>
                 <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: C.muted, textTransform: 'uppercase', marginBottom: 3 }}>Min Words / Paragraph</div>
                 <div style={{ fontSize: 11, color: C.muted }}>Re-balances short text blocks</div>
@@ -583,10 +530,9 @@ export default function App() {
               <Stepper value={minSlot} onChange={setMinSlot} />
             </div>
 
-            <div style={{ width: 1, height: 36, background: C.border, marginRight: 28 }}/>
+            <div className="options-divider" />
 
-            {/* Min words / section */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16, paddingRight: 28 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
               <div>
                 <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: C.muted, textTransform: 'uppercase', marginBottom: 3 }}>Min Words / Section</div>
                 <div style={{ fontSize: 11, color: C.muted }}>Splits undersized units</div>
@@ -594,9 +540,8 @@ export default function App() {
               <Stepper value={minSection} onChange={setMinSection} />
             </div>
 
-            <div style={{ width: 1, height: 36, background: C.border, marginRight: 28 }}/>
+            <div className="options-divider" />
 
-            {/* Reverse */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
               <div>
                 <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: C.muted, textTransform: 'uppercase', marginBottom: 3 }}>Reverse Insertion Order</div>
@@ -639,16 +584,16 @@ export default function App() {
             </button>
           </div>
 
-          {/* ── Result / Error ── */}
+          {/* ── Result ── */}
           {status === 'success' && (
             <div className="fade-up" style={{
-              marginBottom: 20, padding: '16px 22px', borderRadius: 12,
+              marginBottom: 20, padding: '14px 20px', borderRadius: 12,
               background: 'rgba(34,197,94,0.06)',
               border: '1px solid rgba(34,197,94,0.2)',
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16,
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap',
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <span style={{ fontSize: 18, color: '#86efac' }}>✓</span>
+                <span style={{ fontSize: 16, color: '#86efac' }}>✓</span>
                 <span style={{ color: '#86efac', fontWeight: 500, fontSize: 14 }}>Document processed successfully</span>
               </div>
               {resultUrl && resultUrl !== '#' && (
@@ -674,34 +619,20 @@ export default function App() {
           )}
 
           {/* ── Bottom Bar ── */}
-          <div style={{
-            marginTop: 'auto',
-            borderTop: `1px solid ${C.border}`,
-            padding: '13px 0 18px',
-            display: 'flex', alignItems: 'center', gap: 10,
-            flexWrap: 'wrap',
-          }}>
+          <div className="bottom-bar">
             <span style={{ color: C.muted, fontSize: 12, fontFamily: 'monospace' }}>Interactive Test Harness:</span>
-
             <button className="action-btn" onClick={() => { setStatus('success'); setResultUrl('#') }} style={{
               padding: '4px 12px', borderRadius: 5,
-              background: 'rgba(255,255,255,0.04)',
-              border: `1px solid ${C.border}`,
-              color: C.sub, fontSize: 12, cursor: 'pointer', fontFamily: 'monospace',
-              transition: 'all 0.15s',
+              background: 'rgba(255,255,255,0.04)', border: `1px solid ${C.border}`,
+              color: C.sub, fontSize: 12, cursor: 'pointer', fontFamily: 'monospace', transition: 'all 0.15s',
             }}>[Simulate Success]</button>
-
             <button className="action-btn" onClick={() => { setErrorMsg('Simulated: Source contains no 12pt paragraphs.'); setStatus('error') }} style={{
               padding: '4px 12px', borderRadius: 5,
-              background: 'rgba(255,255,255,0.04)',
-              border: `1px solid ${C.border}`,
-              color: C.sub, fontSize: 12, cursor: 'pointer', fontFamily: 'monospace',
-              transition: 'all 0.15s',
+              background: 'rgba(255,255,255,0.04)', border: `1px solid ${C.border}`,
+              color: C.sub, fontSize: 12, cursor: 'pointer', fontFamily: 'monospace', transition: 'all 0.15s',
             }}>[Simulate Error]</button>
-
             <div style={{ flex: 1 }} />
-
-            <span style={{ fontSize: 12, fontFamily: 'monospace', color: C.muted }}>
+            <span className="bottom-bar-engine" style={{ fontSize: 12, fontFamily: 'monospace', color: C.muted }}>
               Worker status:&nbsp;<span style={{ color: C.green }}>active</span>
               &nbsp;&nbsp;Engine:&nbsp;<span style={{ color: C.sub }}>v4.2.1-wasm</span>
             </span>
