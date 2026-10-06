@@ -1,0 +1,67 @@
+@keyframes shimmer {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+.spinner {
+  animation: spin 0.75s linear infinite;
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.fade-up {
+  animation: fade-up 0.25s ease forwards;
+}
+
+.process-btn {
+  background-size: 250% 100%;
+  animation: shimmer 4s linear infinite;
+}
+
+.process-btn:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.process-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.drop-zone:hover {
+  background: rgba(255, 255, 255, 0.025) !important;
+}
+
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #e2e8f0 !important;
+}
+
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+.stepper-btn:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+::-webkit-scrollbar        { width: 5px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: rgba(255,255,255,0.08); border-radius: 4px; }
